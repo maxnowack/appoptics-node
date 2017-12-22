@@ -6,34 +6,34 @@ middleware = require './middleware'
 
 {collector, client, worker, config} = {}
 
-librato = new EventEmitter()
+appoptics = new EventEmitter()
 
-librato.configure = (newConfig) ->
+appoptics.configure = (newConfig) ->
   config = newConfig
   collector = new Collector()
   client = new Client config
-  worker = new Worker job: librato.flush, period: newConfig.period
+  worker = new Worker job: appoptics.flush, period: newConfig.period
 
-librato.increment = (name, value = 1, opts={}) ->
+appoptics.increment = (name, value = 1, opts={}) ->
   (opts = value; value = 1)  if value is Object(value)
   collector.increment "#{config.prefix ? ''}#{format_key(name, opts.source)}",
                       value
 
-librato.measure = (name, value, opts={}) ->
+appoptics.measure = (name, value, opts={}) ->
   collector.measure "#{config.prefix ? ''}#{format_key(name, opts.source)}", value
 
-librato.timing = (name, fn, opts={}, cb) ->
+appoptics.timing = (name, fn, opts={}, cb) ->
   [opts, cb] = [{}, opts] if !cb? and typeof opts is 'function'
   collector.timing "#{config.prefix ? ''}#{format_key(name, opts.source)}", fn, cb
 
-librato.start = ->
+appoptics.start = ->
   worker.start()
 
-librato.stop = (cb) ->
+appoptics.stop = (cb) ->
   worker.stop()
-  librato.flush(cb)
+  appoptics.flush(cb)
 
-librato.flush = (cb = ->) ->
+appoptics.flush = (cb = ->) ->
   counters = []
   gauges = []
   collector.flushTo counters, gauges
@@ -43,13 +43,13 @@ librato.flush = (cb = ->) ->
   return process.nextTick(cb) unless counters.length or gauges.length
 
   client.send {counters, gauges}, (err) ->
-    librato.emit 'error', err if err?
+    appoptics.emit 'error', err if err?
     cb(err)
 
-librato.middleware = middleware(librato)
+appoptics.middleware = middleware(appoptics)
 
 
-module.exports = librato
+module.exports = appoptics
 
 format_key = (name, source) ->
   if source? then "#{sanitize_name(name)};#{source}"

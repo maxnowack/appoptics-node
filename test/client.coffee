@@ -8,7 +8,7 @@ describe 'Client', ->
   describe 'with email and token', ->
 
     beforeEach ->
-      nock('https://metrics-api.librato.com/v1')
+      nock('https://api.appoptics.com/v1')
         .post('/metrics')
         .basicAuth(user: 'foo@example.com', pass: 'bob')
         .delay(10)
@@ -19,13 +19,13 @@ describe 'Client', ->
       nock.cleanAll()
 
     describe '::send', ->
-      it 'sends data to Librato', (done) ->
+      it 'sends data to Appoptics', (done) ->
         client.send {gauges: [{name: 'foo', value: 1}]}, done
 
-  describe 'Librato returns a 400', ->
+  describe 'Appoptics returns a 400', ->
 
     beforeEach ->
-      nock('https://metrics-api.librato.com/v1')
+      nock('https://api.appoptics.com/v1')
         .post('/metrics')
         .basicAuth(user: 'foo@example.com', pass: 'bob')
         .reply(400, errors: {params: {name: ['is not present']}})
@@ -37,12 +37,12 @@ describe 'Client', ->
     describe '::send', ->
       it 'throws an error with the response body', (done) ->
         client.send {gauges: [{name: '', value: 1}]}, (err) ->
-          expect(err.message).to.equal "Error sending to Librato: { errors: { params: { name: [ 'is not present' ] } } } (statusCode: 400)"
+          expect(err.message).to.equal "Error sending to appoptics: { errors: { params: { name: [ 'is not present' ] } } } (statusCode: 400)"
           done()
 
   describe 'with timeout via requestOptions', ->
     beforeEach ->
-      nock('https://metrics-api.librato.com/v1')
+      nock('https://api.appoptics.com/v1')
         .post('/metrics')
         .basicAuth(user: 'foo@example.com', pass: 'bob')
         .socketDelay(10)
@@ -58,14 +58,14 @@ describe 'Client', ->
           expect(err.code).to.equal 'ESOCKETTIMEDOUT'
           done()
 
-  describe 'with 500 from librato', ->
+  describe 'with 500 from appoptics', ->
     beforeEach ->
-      nock('https://metrics-api.librato.com/v1')
+      nock('https://api.appoptics.com/v1')
         .post('/metrics')
         .basicAuth(user: 'foo@example.com', pass: 'bob')
         .reply(504)
 
-      nock('https://metrics-api.librato.com/v1')
+      nock('https://api.appoptics.com/v1')
         .post('/metrics')
         .basicAuth(user: 'foo@example.com', pass: 'bob')
         .reply(200)
@@ -85,6 +85,5 @@ describe 'Client', ->
       client = new Client simulate: true
 
     describe '::send', ->
-      it 'sends data to Librato', (done) ->
+      it 'sends data to Appoptics', (done) ->
         client.send {gauges: [{name: 'foo', value: 1}]}, done
-

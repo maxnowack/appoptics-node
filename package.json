@@ -1,14 +1,14 @@
 {
-  "name": "librato-node",
+  "name": "appoptics-node",
   "version": "5.0.2",
-  "description": "A node.js client for Librato Metrics (http://metrics.librato.com/)",
-  "homepage": "http://goodeggs.github.com/librato-node/",
-  "main": "lib/librato",
+  "description": "A node.js client for appoptics Metrics (http://appoptics.com/)",
+  "main": "lib/appoptics",
   "repository": {
     "type": "git",
-    "url": "git://github.com/goodeggs/librato-node.git"
+    "url": "git://github.com/maxnowack/appoptics-node.git"
   },
   "keywords": [
+    "appoptics",
     "librato",
     "metrics",
     "express"
