@@ -5,15 +5,15 @@ nock = require 'nock'
 describe 'Client', ->
   {client} = {}
 
-  describe 'with email and token', ->
+  describe 'with token', ->
 
     beforeEach ->
       nock('https://api.appoptics.com/v1')
         .post('/metrics')
-        .basicAuth(user: 'foo@example.com', pass: 'bob')
+        .basicAuth(user: 'bob', pass: '')
         .delay(10)
         .reply(200)
-      client = new Client email: 'foo@example.com', token: 'bob'
+      client = new Client token: 'bob'
 
     afterEach ->
       nock.cleanAll()
@@ -27,9 +27,9 @@ describe 'Client', ->
     beforeEach ->
       nock('https://api.appoptics.com/v1')
         .post('/metrics')
-        .basicAuth(user: 'foo@example.com', pass: 'bob')
+        .basicAuth(user: 'bob', pass: '')
         .reply(400, errors: {params: {name: ['is not present']}})
-      client = new Client email: 'foo@example.com', token: 'bob'
+      client = new Client token: 'bob'
 
     afterEach ->
       nock.cleanAll()
@@ -44,10 +44,10 @@ describe 'Client', ->
     beforeEach ->
       nock('https://api.appoptics.com/v1')
         .post('/metrics')
-        .basicAuth(user: 'foo@example.com', pass: 'bob')
+        .basicAuth(user: 'bob', pass: '')
         .socketDelay(10)
         .reply(200)
-      client = new Client email: 'foo@example.com', token: 'bob', requestOptions: {timeout: 5, maxAttempts: 1}
+      client = new Client token: 'bob', requestOptions: {timeout: 5, maxAttempts: 1}
 
     afterEach ->
       nock.cleanAll()
@@ -62,15 +62,15 @@ describe 'Client', ->
     beforeEach ->
       nock('https://api.appoptics.com/v1')
         .post('/metrics')
-        .basicAuth(user: 'foo@example.com', pass: 'bob')
+        .basicAuth(user: 'bob', pass: '')
         .reply(504)
 
       nock('https://api.appoptics.com/v1')
         .post('/metrics')
-        .basicAuth(user: 'foo@example.com', pass: 'bob')
+        .basicAuth(user: 'bob', pass: '')
         .reply(200)
 
-      client = new Client email: 'foo@example.com', token: 'bob'
+      client = new Client token: 'bob'
 
     afterEach ->
       nock.cleanAll()
