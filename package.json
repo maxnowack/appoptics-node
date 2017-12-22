@@ -28,7 +28,9 @@
     "source-map-support": "^0.2.8"
   },
   "scripts": {
-    "pretest": "./node_modules/.bin/coffee -c -m -o lib src",
+    "build": "./node_modules/.bin/coffee -c -m -o lib src",
+    "prepare": "npm run build",
+    "pretest": "npm run build",
     "test": "./node_modules/.bin/mocha"
   },
   "publishConfig": {
